@@ -7,11 +7,16 @@ import { Book, BookDocument } from './book.model';
 export class BookService {
     constructor(@InjectModel(Book.name) private bookModel: Model<BookDocument>) { }
 
-    async findAll(): Promise<Book[]> {
-        return this.bookModel.find().exec();
+    async create(book: Book): Promise<Book> {
+        const newBook = new this.bookModel(book);
+        return newBook.save();
     }
 
-    async findOne(id: string): Promise<Book> {
-        return this.bookModel.findById(id).exec();
+    async update(id: string, book: Book): Promise<Book> {
+        return this.bookModel.findByIdAndUpdate(id, book, { new: true }).exec();
+    }
+
+    async delete(id: string): Promise<Book> {
+        return this.bookModel.findByIdAndDelete(id).exec();
     }
 }
